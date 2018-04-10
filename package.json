@@ -1,0 +1,32 @@
+{
+  "name": "rootvegetablewebsite",
+  "version": "1.0.0",
+  "description": "A website for bidding on root vegetables.",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "^4.1.0",
+    "express": "^4.16.3",
+    "jquery": "^3.3.1",
+    "node": "^9.11.0",
+    "popper": "^1.0.1",
+    "popper.js": "^1.14.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dev-Laurin/RootVegetableWebsite.git"
+  },
+  "keywords": [
+    "Root",
+    "Vegetable"
+  ],
+  "author": "Laurin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dev-Laurin/RootVegetableWebsite/issues"
+  },
+  "homepage": "https://github.com/Dev-Laurin/RootVegetableWebsite#readme"
+}
