@@ -1,4 +1,4 @@
-//Node Express Server
+da//Node Express Server
 
 //Express Packages 
 const express = require('express')
@@ -39,6 +39,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.get('/', (request, response) => {
 
 	response.sendFile(path.join(__dirname + '/index.html')); 
+	response.sendFile(path.join(__dirname + '/index.css')); 
 
 	//dump database contents to see if updates work? 
 	console.log(database.collection("users").find({}, function(err, res){
