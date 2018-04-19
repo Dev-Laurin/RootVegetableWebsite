@@ -36,53 +36,96 @@
 		<div class="container"> 
 			<div class="row"> 
 				<div class="col-sm-8"> 
-					<h1>Welcome Citizen with IZ: + iz + </h1>
+					<h1>Welcome Citizen</h1>
 				</div>
 
 				<div class="col-sm-4"> 
 					<form action="/" method="post">
 						Enter 6-digit IZ Number: <input type="text"  maxlength="6" name="iz"><br> 
-						<input type="submit" value="Submit">
-					</form><br>
+					<br>
 					<p style="color: #FF0000;"> + error + </p>
 				</div>
 
 			</div>
 
 			<!--List of Root Vegetables to Bid on --> 
+
+				<div class="row">
+					<div class="col-sm-8">
+						<h2>Bidding on Root Vegetable</h2>
+					</div>
+					<div class="col-sm-4">
+						<h3 id="Izhk">Izhk Left: 100</h3>
+					</div>
+				</div><br>
+
+				<table id="t01" style="width:100%">
+				  <tr>
+				    <th>Vegetable</th>
+				    <th>Izhk to Bid</th> 
+				  </tr>
+				  <tr>
+				    <td>Potato</td>
+				    <td><input type="number" id="potato_bid" name="potato_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"> </td> 
+				  </tr>
+				  <tr>
+				    <td>Onion</td>
+				    <td><input type="number" id="onion_bid" name="onion_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
+				  </tr>
+				    <tr>
+				    <td>Turnip</td>
+				    <td><input type="number" id="turnip_bid" name="turnip_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
+				  </tr>
+				    <tr>
+				    <td>Imported Turnip</td>
+				    <td><input type="number" id="imported_bid" name="imported_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
+				  </tr>
+				</table>
+
+				<div class="row">
+					<div class="col-sm-8">
+						<h3> Submit Bid:  </h3>
+					</div> <br>
+					<div class="col-sm-4">
+						<input type="submit" value="Submit">
+					</div> 
+				</div> 
+			</form>   
+
 			<div class="row">
-				<div class="col-sm-8">
-					<h2>Bidding on Root Vegetable</h2>
-				</div>
-				<div class="col-sm-4">
-					<h3>Izhk Left: 100</h3>
-				</div>
-			</div><br>
+				<div class="col-sm-12"> 
+					<h4 id="bid_error" style="color: #FF0000;"> Error, greater than 100 Izhk spent </h4> 
+				</div> 
+			</div> 
 
-			<table id="t01" style="width:100%">
-			  <tr>
-			    <th>Vegetable</th>
-			    <th>Izhk to Bid</th> 
-			  </tr>
-			  <tr>
-			    <td>Potato</td>
-			    <td><input type="number" name="potato_bid" min="0" max="100" step="1" value="0"> </td> 
-			  </tr>
-			  <tr>
-			    <td>Onion</td>
-			    <td><input type="number" name="onion_bid" min="0" max="100" step="1" value="0"></td> 
-			  </tr>
-			    <tr>
-			    <td>Turnip</td>
-			    <td><input type="number" name="turnip_bid" min="0" max="100" step="1" value="0"></td> 
-			  </tr>
-			    <tr>
-			    <td>Imported Turnip</td>
-			    <td><input type="number" name="imported_bid" min="0" max="100" step="1" value="0"></td> 
-			  </tr>
-			</table>
 		</div>
+		
+		<script type="text/javascript">
+			//subtract what was bidded on from Izhk total 
+			function updateIzhk(){
 
+				//Get our new values 
+				var potatoBid = document.getElementById("potato_bid").value 
+				var onionBid = document.getElementById("onion_bid").value 
+				var turnipBid = document.getElementById("turnip_bid").value 
+				var importedTurnipBid = document.getElementById("imported_bid").value 
+				//What the updated value would be 
+				var newValue = 100 - ( Number(potatoBid) + Number(onionBid) + Number(turnipBid) + Number(importedTurnipBid))
+
+				//Check if it is out of bounds 
+				if(newValue > 100 || newValue < 0){
+					//Display error message 
+					document.getElementById("bid_error").innerHTML = "Error Invalid Izhk Amount."
+					document.getElementById("Izhk").innerHTML = "Izhk: Invalid" 
+				}
+				else{
+					document.getElementById("Izhk").innerHTML = "Izhk: " + newValue.toString(); 
+					document.getElementById("bid_error").innerHTML = "" 
+				}
+			}
+		
+		</script> 
 	</body> 
+
 
 </html> 
