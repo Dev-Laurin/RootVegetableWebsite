@@ -1,5 +1,6 @@
+#!/usr/bin/env node 
 //Node Express Server
-
+//https://stackoverflow.com/questions/5009324/node-js-nginx-what-now
 //Express Packages 
 const express = require('express')
 const app = express() 
