@@ -28,6 +28,11 @@ mongoClient.connect(url, function(err, db) {
 
 	//else no errors 
 	database = db.db("rootVegetable"); 
+
+	database.collection("vegetable").remove({}, function(err, res){
+		console.log(res)
+	})
+
 	database.createCollection("vegetable", function(err, res){
 		if(err){
 			throw err; 
@@ -132,7 +137,7 @@ app.get('/', (request, response) => {
 				    <td><input type="number" id="turnip_bid" name="turnip_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
 				  </tr>
 				    <tr>
-				    <td>importedVeggieName</td>
+				    <td> ` + importedVeggieName + ` </td>
 				    <td><input type="number" id="imported_bid" name="imported_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
 				  </tr>
 				</table>
@@ -274,7 +279,7 @@ app.post('/', (req, res)=> {
 				    <td><input type="number" id="turnip_bid" name="turnip_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
 				  </tr>
 				    <tr>
-				    <td>importedVeggieName</td>
+				    <td> ` + importedVeggieName + ` </td>
 				    <td><input type="number" id="imported_bid" name="imported_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
 				  </tr>
 				</table>
@@ -406,7 +411,7 @@ var bidErrorHTML = `<!DOCTYPE html>
 				    <td><input type="number" id="turnip_bid" name="turnip_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
 				  </tr>
 				    <tr>
-				    <td>importedVeggieName</td>
+				    <td> ` + importedVeggieName + ` </td>
 				    <td><input type="number" id="imported_bid" name="imported_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
 				  </tr>
 				</table>
@@ -539,7 +544,7 @@ var bidErrorHTML = `<!DOCTYPE html>
 				    <td><input type="number" id="turnip_bid" name="turnip_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
 				  </tr>
 				    <tr>
-				    <td>importedVeggieName</td>
+				    <td> ` + importedVeggieName + ` </td>
 				    <td><input type="number" id="imported_bid" name="imported_bid" min="0" max="100" step="1" value="0" onclick="updateIzhk()"></td> 
 				  </tr>
 				</table>
@@ -639,26 +644,81 @@ var bidErrorHTML = `<!DOCTYPE html>
 			else{
 				//No errors, accept bid into database
 				//find the old value 
-				var vegInDatabase = database.collection("vegetable").find({_id: "Potato"}) 
-				vegInDatabase.bids.push({bid: potatoBid, iz: iz})
-				var veggie = {_id: "Potato", bids: vegInDatabase.bids}
-				database.collection("vegetable").update(veggie, veggie, {upsert: true});
+				vegInDatabase = database.collection("vegetable").findOne({_id: "Potato"}, 
+					function(err, result){
+						if(err) throw err; 
+						var bidArray = result.bids 
+						//look in array for duplicates to erase 
+						for(var i=0; i<bidArray.length; i+=1){
+							if(bidArray[i]._id == iz){
+								//delete old element and resize array 
+								bidArray.splice(i,1); 
+							} 
+						}
+						//put new value in 
+						bidArray.push({bid: potatoBid, _id: iz})
+						var veggie = {_id: "Potato", bids: bidArray}
+						database.collection("vegetable").update({_id: "Potato"}, veggie, {upsert: true}, 
+							function(err, res){
+								if(err) throw err; 
+							});
+					}) 
 
-				var vegInDatabase = database.collection("vegetable").find({_id: "Onion"}) 
-				vegInDatabase.bids.push({bid: onionBid, iz: iz})
-				var veggie = {_id: "Onion", bids: vegInDatabase.bids}
-				database.collection("vegetable").update(veggie, veggie, {upsert: true});
+				vegInDatabase = database.collection("vegetable").findOne({_id: "Onion"}, 
+					function(err, result){
+						if(err) throw err; 
+						var bidArray = result.bids 
+						//look in array for duplicates to erase 
+						for(var i=0; i<bidArray.length; i+=1){
+							if(bidArray[i]._id == iz){
+								//delete old element and resize array 
+								bidArray.splice(i,1); 
+							} 
+						}
+						//put new value in 
+						bidArray.push({bid: onionBid, _id: iz})
+						var veggie = {_id: "Onion", bids: bidArray}
+						database.collection("vegetable").update({_id: "Onion"}, veggie, {upsert: true}, 
+							function(err, res){
+								if(err) throw err; 
+							});
+					}) 		
 
-				var vegInDatabase = database.collection("vegetable").find({_id: "Turnip"}) 
-				vegInDatabase.bids.push({bid: turnipBid, iz: iz})
-				var veggie = {_id: "Turnip", bids: vegInDatabase.bids}
-				database.collection("vegetable").update(veggie, veggie, {upsert: true});
+				vegInDatabase = database.collection("vegetable").findOne({_id: "Turnip"}, 
+					function(err, result){
+						if(err) throw err; 
+						var bidArray = result.bids 
+						//look in array for duplicates to erase 
+						for(var i=0; i<bidArray.length; i+=1){
+							if(bidArray[i]._id == iz){
+								//delete old element and resize array 
+								bidArray.splice(i,1); 
+							} 
+						}
+						//put new value in 
+						bidArray.push({bid: turnipBid, _id: iz})
+						var veggie = {_id: "Turnip", bids: bidArray}
+						database.collection("vegetable").update({_id: "Turnip"}, veggie, {upsert: true});
+					}) 		
 
-				var vegInDatabase = database.collection("vegetable").find({_id: importedVeggieName}) 
-				vegInDatabase.bids.push({bid: importedBid, iz: iz})
-				var veggie = {_id: importedVeggieName, bids: vegInDatabase.bids}
-				database.collection("vegetable").update(veggie, veggie, {upsert: true});
-				 
+				vegInDatabase = database.collection("vegetable").findOne({_id: importedVeggieName}, 
+					function(err, result){
+
+						if(err) throw err; 
+						var bidArray = result.bids 
+						//look in array for duplicates to erase 
+						for(var i=0; i<bidArray.length; i+=1){
+							if(bidArray[i]._id == iz){
+								//delete old element and resize array 
+								bidArray.splice(i,1); 
+							} 
+						}
+						//put new value in 
+						bidArray.push({bid: importedBid, _id: iz})
+						var veggie = {_id: importedVeggieName, bids: bidArray}
+						database.collection("vegetable").update({_id: importedVeggieName}, veggie, {upsert: true});
+					}) 	
+
 				res.set('Content-Type', 'text/html');
 				res.send(html);
 			}
@@ -723,31 +783,8 @@ app.post('/primeMinister', [sanitize('password').toString()], (req, res) =>{
 
 			<ul> 
 		    	<li><h3>Potato</h3></li>
-		    	<ul>
-		    		<li> bid1</li>
-		    		<li>bid2</li> 
-		    	</ul> 
-
-		    	<li><h3>Onion</h3></li> 
-		    		<ul>
-		    			<li>bid</li>
-		    		</ul> 
-		    	<li><h3>Turnip</h3></li>
-		    		<ul>
-		    			<li>bid</li>
-		    		</ul>
-		    	<li><h3>importedVeggieName</h3></li> 
-		    		<ul>
-		    			<li>bid</li>
-		    		</ul>
-		    </ul> 
-
-		</div>
-		
-	</body> 
-
-
-</html> `; 
+		    	<ul> ` ;
+		    		
 
 var errorHTML = `<!DOCTYPE html> 
 <html lang="en"> 
@@ -803,16 +840,79 @@ var errorHTML = `<!DOCTYPE html>
 		console.log("Logged in. Welcome.")
 
 		//Retrieve all bids 
-		var potato = database.collection("vegetable").findOne({_id: "Potato"}, function(err, result){
-			console.log(result)
+		database.collection("vegetable").findOne({_id: "Potato"}, function(err, result){
+			if(err) throw err; 
+
+			var potato = result.bids 
+
+			//onion
+			database.collection("vegetable").findOne({_id: "Onion"}, function(err, result){
+				if(err) throw err; 
+
+				var onion = result.bids 
+
+				database.collection("vegetable").findOne({_id: "Turnip"}, function(err, result){
+					if(err) throw err; 
+
+					var turnip = result.bids 
+				
+
+					database.collection("vegetable").findOne({_id: importedVeggieName}, function(err, result){
+						if(err) throw err; 
+
+						var imported = result.bids 
+
+						//we have all our veggies, load them into the html page
+						console.log(potato)
+						console.log(onion)
+						console.log(turnip)
+						console.log(result.bids)
+
+						//sort arrays by highest bid 
+						potato = potato.sort(function(a,b){
+							return a.bid < b.bid; 
+						})
+
+						onion.sort(function(a,b){
+							return a.bid < b.bid;  
+						})
+
+						turnip.sort(function(a,b){
+							return a.bid < b.bid; 
+						})
+
+						imported.sort(function(a,b){
+							return a.bid < b.bid; 
+						})
+
+						//make multiple list tags for each bid
+						html = addListTags(potato, html)
+						html += `<li><h3>Onion</h3></li> 
+								    		<ul>`
+
+						html = addListTags(onion, html)
+						html+=`<li><h3>Turnip</h3></li>
+		    		<ul>`
+						html = addListTags(turnip, html)
+						html+=`<li><h3>` + importedVeggieName + `</h3></li> 
+		    		<ul>`
+						html = addListTags(imported, html)
+
+						html+= ` </ul> 
+
+		</div>
+		
+	</body> 
+
+
+</html> `; 
+						//send the data 
+						res.send(html)
+
+					})
+				})
+			})
 		})
-
-
-
-
-
-		//send the data 
-		res.send(html)
 
 	}
 	else{
@@ -821,6 +921,15 @@ var errorHTML = `<!DOCTYPE html>
 	}
 	
 })
+
+function addListTags(array, html){
+	for(var i=0; i<array.length; i+=1){
+		var listTag = "<li>Bid: " +  array[i].bid + " IZ: " + array[i]._id + "</li>";
+		html+=listTag 
+	} 
+	html += "</ul>"
+	return html 
+}
 
 //Have server listen for clients
 app.listen(port, (err) => {
